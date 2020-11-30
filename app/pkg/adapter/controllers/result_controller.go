@@ -28,7 +28,7 @@ func NewResultController(conn *gorm.DB, logger interfaces.Logger) *ResultControl
 func (controller *ResultController) Create(c interfaces.Context) {
 	type (
 		Request struct {
-			Label string   `json:"title"`
+			Label string   `json:"label"`
 			Value []string `json:"value"`
 		}
 		Response struct {
@@ -36,7 +36,11 @@ func (controller *ResultController) Create(c interfaces.Context) {
 		}
 	)
 	req := Request{}
-	c.Bind(&req)
+	if err := c.Bind(&req); err != nil {
+		controller.Interactor.Logger.Log(errors.Wrap(err, "result_controller: bad request"))
+		c.JSON(400, NewError(400, err.Error()))
+		return
+	}
 	result := domain.Result{Label: req.Label, Value: req.Value}
 
 	id, err := controller.Interactor.Add(result)
@@ -59,7 +63,11 @@ func (controller *ResultController) Show(c interfaces.Context) {
 		}
 	)
 	req := Request{}
-	c.Bind(&req)
+	if err := c.Bind(&req); err != nil {
+		controller.Interactor.Logger.Log(errors.Wrap(err, "result_controller: bad request"))
+		c.JSON(400, NewError(400, err.Error()))
+		return
+	}
 
 	r, err := controller.Interactor.FindByID(req.ID)
 	if err != nil {
@@ -68,5 +76,22 @@ func (controller *ResultController) Show(c interfaces.Context) {
 		return
 	}
 	res := Response{Result: r}
+	c.JSON(200, res)
+}
+
+func (controller *ResultController) Index(c interfaces.Context) {
+	type (
+		Response struct {
+			Results []domain.Result `json:"results"`
+		}
+	)
+
+	r, err := controller.Interactor.FindAll()
+	if err != nil {
+		controller.Interactor.Logger.Log(errors.Wrap(err, "result_controller: findall error"))
+		c.JSON(500, NewError(500, err.Error()))
+		return
+	}
+	res := Response{Results: r}
 	c.JSON(200, res)
 }

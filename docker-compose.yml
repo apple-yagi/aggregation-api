@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   app:
     build: ./app
@@ -6,18 +6,38 @@ services:
     ports:
       - "3030:3030"
     links:
-      - mysql
-    tty: true
+      - mydb
+    depends_on:
+      - mydb
+    environment:
+      - PG_SSLMODE=disable
+      - PG_PORT=5432
+      - PG_HOST=pg
+      - PG_DBNAME=test
+      - PG_USER=postgres
+      - PG_PASSWORD=password
     volumes:
       - ./app:/app
     command: air
 
-  mysql:
+  mydb:
     build: ./mysql
     container_name: mydb
     ports:
       - "3306:3306"
-    env_file:
-      - ./mysql/env
+    environment:
+      MYSQL_DATABASE: hoge
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
       - ./mysql/db:/var/lib/mysql
+
+  pgdb:
+    image: postgres
+    container_name: pgdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=test

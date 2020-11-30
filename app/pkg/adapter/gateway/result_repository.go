@@ -3,6 +3,8 @@ package gateway
 import (
 	"aggregation-mod/pkg/domain"
 
+	"github.com/lib/pq"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -13,16 +15,16 @@ type (
 
 	Result struct {
 		gorm.Model
-		Label           string   `gorm:"size:20;not null"`
-		Value           []string `gorm:"type:string[]"`
-		ExperimentRefer uint
+		Label        string         `gorm:"size:20;not null"`
+		Value        pq.StringArray `gorm:"type:text[]"`
+		ExperimentID uint
 	}
 )
 
 func (r *ResultRepository) Store(d domain.Result) (id int, err error) {
 	result := &Result{
 		Label: d.Label,
-		Value: d.Value,
+		// Value: d.Value,
 	}
 
 	if err = r.Conn.Create(result).Error; err != nil {
@@ -39,9 +41,9 @@ func (r *ResultRepository) FindByID(id string) (d domain.Result, err error) {
 	}
 
 	d = domain.Result{
-		ID:    int(result.ID),
+		ID:    result.ID,
 		Label: result.Label,
-		Value: result.Value,
+		// Value: result.Value,
 	}
 
 	return
@@ -56,10 +58,9 @@ func (r *ResultRepository) FindAll() (d []domain.Result, err error) {
 	n := len(results)
 	d = make([]domain.Result, n)
 	for i := 0; i < n; i++ {
-		d[i].ID = int(results[i].ID)
+		d[i].ID = results[i].ID
 		d[i].Label = results[i].Label
-		d[i].Value = results[i].Value
-		d[i].ExperimentRefer = results[i].ExperimentRefer
+		// d[i].Value = results[i].Value
 	}
 
 	return

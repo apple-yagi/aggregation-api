@@ -1,17 +1,14 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"aggregation-mod/pkg/external"
+	"aggregation-mod/pkg/external/pg"
 )
 
 func main() {
-	engine := gin.Default()
-	engine.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "hello golang",
-		})
-	})
-	engine.Run(":3030")
+	defer pg.CloseConn()
+
+	if err := external.Router.Run(":3030"); err != nil {
+		return
+	}
 }

@@ -13,8 +13,8 @@ type (
 
 	Experiment struct {
 		gorm.Model
-		Title   string          `gorm:"size:20;not null"`
-		Results []domain.Result `gorm:"foreignKey:ExperimentRefer"`
+		Title   string `gorm:"size:20;not null"`
+		Results []Result
 	}
 )
 
@@ -36,9 +36,17 @@ func (r *ExperimentRepository) FindByID(id string) (d domain.Experiment, err err
 		return
 	}
 
+	n := len(experiment.Results)
+	results := make([]domain.Result, n)
+	for i := 0; i < n; i++ {
+		results[i].ID = experiment.Results[i].ID
+		results[i].Label = experiment.Results[i].Label
+		results[i].Value = experiment.Results[i].Value
+	}
+
 	d = domain.Experiment{
 		Title:   experiment.Title,
-		Results: experiment.Results,
+		Results: results,
 	}
 
 	return
@@ -53,9 +61,8 @@ func (r *ExperimentRepository) FindByTitle(title string) (d []domain.Experiment,
 	n := len(experiments)
 	d = make([]domain.Experiment, n)
 	for i := 0; i < n; i++ {
-		d[i].ID = int(experiments[i].ID)
+		d[i].ID = experiments[i].ID
 		d[i].Title = experiments[i].Title
-		d[i].Results = experiments[i].Results
 	}
 	return
 }
@@ -69,9 +76,8 @@ func (r *ExperimentRepository) FindAll() (d []domain.Experiment, err error) {
 	n := len(experiments)
 	d = make([]domain.Experiment, n)
 	for i := 0; i < n; i++ {
-		d[i].ID = int(experiments[i].ID)
+		d[i].ID = experiments[i].ID
 		d[i].Title = experiments[i].Title
-		d[i].Results = experiments[i].Results
 	}
 	return
 }

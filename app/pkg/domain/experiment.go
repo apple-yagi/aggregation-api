@@ -1,7 +1,7 @@
 package domain
 
 type Experiment struct {
-	ID      int
+	ID      uint
 	Title   string
 	Results []Result
 }
