@@ -21,10 +21,16 @@ type (
 	}
 )
 
-func (r *ResultRepository) Store(d domain.Result) (id int, err error) {
+func (r *ResultRepository) Store(d domain.Result, experiment_id string) (id int, err error) {
+	experiment := Experiment{}
+	if err = r.Conn.First(&experiment, experiment_id).Error; err != nil {
+		return
+	}
+
 	result := &Result{
-		Label: d.Label,
-		// Value: d.Value,
+		Label:        d.Label,
+		Value:        d.Value,
+		ExperimentID: experiment.ID,
 	}
 
 	if err = r.Conn.Create(result).Error; err != nil {
@@ -41,9 +47,10 @@ func (r *ResultRepository) FindByID(id string) (d domain.Result, err error) {
 	}
 
 	d = domain.Result{
-		ID:    result.ID,
-		Label: result.Label,
-		// Value: result.Value,
+		ID:           result.ID,
+		Label:        result.Label,
+		Value:        result.Value,
+		ExperimentID: result.ExperimentID,
 	}
 
 	return
@@ -60,7 +67,8 @@ func (r *ResultRepository) FindAll() (d []domain.Result, err error) {
 	for i := 0; i < n; i++ {
 		d[i].ID = results[i].ID
 		d[i].Label = results[i].Label
-		// d[i].Value = results[i].Value
+		d[i].Value = results[i].Value
+		d[i].ExperimentID = results[i].ExperimentID
 	}
 
 	return

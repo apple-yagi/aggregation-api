@@ -41,9 +41,12 @@ func (controller *ResultController) Create(c interfaces.Context) {
 		c.JSON(400, NewError(400, err.Error()))
 		return
 	}
+
+	e_id := c.Param("experiment_id")
+
 	result := domain.Result{Label: req.Label, Value: req.Value}
 
-	id, err := controller.Interactor.Add(result)
+	id, err := controller.Interactor.Add(result, e_id)
 	if err != nil {
 		controller.Interactor.Logger.Log(errors.Wrap(err, "result_controller: cannot add result"))
 		c.JSON(500, NewError(500, err.Error()))
@@ -56,18 +59,14 @@ func (controller *ResultController) Create(c interfaces.Context) {
 func (controller *ResultController) Show(c interfaces.Context) {
 	type (
 		Request struct {
-			ID string `json:"id"`
+			ID string
 		}
 		Response struct {
 			Result domain.Result `json:"result"`
 		}
 	)
 	req := Request{}
-	if err := c.Bind(&req); err != nil {
-		controller.Interactor.Logger.Log(errors.Wrap(err, "result_controller: bad request"))
-		c.JSON(400, NewError(400, err.Error()))
-		return
-	}
+	req.ID = c.Param("id")
 
 	r, err := controller.Interactor.FindByID(req.ID)
 	if err != nil {

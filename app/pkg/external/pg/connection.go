@@ -15,8 +15,8 @@ type Env struct {
 	Sslmode  string `default:"disable"`
 	Port     string `default:"5432"`
 	Host     string `default:"localhost"`
-	DBNAME   string `default:"test"`
-	User     string `default:"postgres"`
+	Dbname   string `default:"test"`
+	User     string `default:"root"`
 	Password string `default:"password"`
 }
 
@@ -27,7 +27,7 @@ func Connect() *gorm.DB {
 		panic(err)
 	}
 
-	db, err = gorm.Open("postgres", "host="+pgenv.Host+" port="+pgenv.Port+" user="+pgenv.User+" dbname="+pgenv.DBNAME+" password="+pgenv.Password+" sslmode="+pgenv.Sslmode)
+	db, err = gorm.Open("postgres", "host="+pgenv.Host+" port="+pgenv.Port+" user="+pgenv.User+" dbname="+pgenv.Dbname+" password="+pgenv.Password+" sslmode="+pgenv.Sslmode)
 
 	if err != nil {
 		panic(err)

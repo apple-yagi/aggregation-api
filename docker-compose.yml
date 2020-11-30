@@ -7,12 +7,14 @@ services:
       - "3030:3030"
     links:
       - mydb
+      - pgdb
     depends_on:
       - mydb
+      - pgdb
     environment:
       - PG_SSLMODE=disable
       - PG_PORT=5432
-      - PG_HOST=pg
+      - PG_HOST=pgdb
       - PG_DBNAME=test
       - PG_USER=postgres
       - PG_PASSWORD=password
@@ -32,7 +34,7 @@ services:
       - ./mysql/db:/var/lib/mysql
 
   pgdb:
-    image: postgres
+    image: postgres:12.5
     container_name: pgdb
     ports:
       - "5432:5432"

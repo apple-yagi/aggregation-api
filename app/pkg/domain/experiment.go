@@ -1,7 +1,7 @@
 package domain
 
 type Experiment struct {
-	ID      uint
-	Title   string
-	Results []Result
+	ID      uint     `json:"id"`
+	Title   string   `json:"title"`
+	Results []Result `json:"results"`
 }

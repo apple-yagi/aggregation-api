@@ -28,7 +28,8 @@ func NewExperimentController(conn *gorm.DB, logger interfaces.Logger) *Experimen
 func (controller *ExperimentController) Create(c interfaces.Context) {
 	type (
 		Request struct {
-			Title string `json:"title"`
+			Title   string          `json:"title"`
+			Results []domain.Result `json:"results"`
 		}
 		Response struct {
 			ExperimentID int `json:"experiment_id"`
@@ -40,7 +41,7 @@ func (controller *ExperimentController) Create(c interfaces.Context) {
 		c.JSON(400, NewError(400, err.Error()))
 		return
 	}
-	experiment := domain.Experiment{Title: req.Title}
+	experiment := domain.Experiment{Title: req.Title, Results: req.Results}
 
 	id, err := controller.Interactor.Add(experiment)
 	if err != nil {
@@ -55,18 +56,14 @@ func (controller *ExperimentController) Create(c interfaces.Context) {
 func (controller *ExperimentController) Show(c interfaces.Context) {
 	type (
 		Request struct {
-			ID string `json:"id"`
+			ID string
 		}
 		Response struct {
 			Experiment domain.Experiment `json:"experiment"`
 		}
 	)
 	req := Request{}
-	if err := c.Bind(&req); err != nil {
-		controller.Interactor.Logger.Log(errors.Wrap(err, "experiment_controller: bad request"))
-		c.JSON(400, NewError(400, err.Error()))
-		return
-	}
+	req.ID = c.Param("id")
 
 	r, err := controller.Interactor.FindByID(req.ID)
 	if err != nil {

@@ -19,8 +19,17 @@ type (
 )
 
 func (r *ExperimentRepository) Store(d domain.Experiment) (id int, err error) {
+	n := len(d.Results)
+	results := make([]Result, n)
+	for i := 0; i < n; i++ {
+		results[i].ID = d.Results[i].ID
+		results[i].Label = d.Results[i].Label
+		results[i].Value = d.Results[i].Value
+	}
+
 	experiment := &Experiment{
-		Title: d.Title,
+		Title:   d.Title,
+		Results: results,
 	}
 
 	if err = r.Conn.Create(experiment).Error; err != nil {
@@ -32,7 +41,7 @@ func (r *ExperimentRepository) Store(d domain.Experiment) (id int, err error) {
 
 func (r *ExperimentRepository) FindByID(id string) (d domain.Experiment, err error) {
 	experiment := Experiment{}
-	if err = r.Conn.First(&experiment, id).Error; err != nil {
+	if err = r.Conn.Preload("Results").First(&experiment, id).Error; err != nil {
 		return
 	}
 
@@ -42,9 +51,11 @@ func (r *ExperimentRepository) FindByID(id string) (d domain.Experiment, err err
 		results[i].ID = experiment.Results[i].ID
 		results[i].Label = experiment.Results[i].Label
 		results[i].Value = experiment.Results[i].Value
+		results[i].ExperimentID = experiment.Results[i].ExperimentID
 	}
 
 	d = domain.Experiment{
+		ID:      experiment.ID,
 		Title:   experiment.Title,
 		Results: results,
 	}

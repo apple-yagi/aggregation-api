@@ -10,9 +10,9 @@ type ResultInteractor struct {
 	Logger           interfaces.Logger
 }
 
-func (i *ResultInteractor) Add(r domain.Result) (int, error) {
+func (i *ResultInteractor) Add(r domain.Result, experiment_id string) (int, error) {
 	i.Logger.Log("store result!")
-	return i.ResultRepository.Store(r)
+	return i.ResultRepository.Store(r, experiment_id)
 }
 
 func (i *ResultInteractor) FindAll() ([]domain.Result, error) {

@@ -5,7 +5,7 @@ import (
 )
 
 type ResultRepository interface {
-	Store(domain.Result) (int, error)
+	Store(domain.Result, string) (int, error)
 	FindByID(string) (domain.Result, error)
 	FindAll() ([]domain.Result, error)
 }
