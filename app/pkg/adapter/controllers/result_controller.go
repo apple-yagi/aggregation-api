@@ -94,3 +94,25 @@ func (controller *ResultController) Index(c interfaces.Context) {
 	res := Response{Results: r}
 	c.JSON(200, res)
 }
+
+func (controller *ResultController) Delete(c interfaces.Context) {
+	type (
+		Request struct {
+			ID string
+		}
+		Response struct {
+			ResultID int `json:"result_id"`
+		}
+	)
+	req := Request{}
+	req.ID = c.Param("id")
+
+	r, err := controller.Interactor.Remove(req.ID)
+	if err != nil {
+		controller.Interactor.Logger.Log(errors.Wrap(err, "result_controller: cannot remove result"))
+		c.JSON(500, NewError(500, err.Error()))
+		return
+	}
+	res := Response{ResultID: r}
+	c.JSON(200, res)
+}

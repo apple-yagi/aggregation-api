@@ -15,6 +15,11 @@ func (i *ExperimentInteractor) Add(e domain.Experiment) (int, error) {
 	return i.ExperimentRepository.Store(e)
 }
 
+func (i *ExperimentInteractor) Remove(id string) (int, error) {
+	i.Logger.Log("remove experiment!")
+	return i.ExperimentRepository.Delete(id)
+}
+
 func (i *ExperimentInteractor) FindAll() ([]domain.Experiment, error) {
 	i.Logger.Log("findall experiment")
 	return i.ExperimentRepository.FindAll()

@@ -3,6 +3,8 @@ package gateway
 import (
 	"aggregation-mod/pkg/domain"
 
+	"github.com/lib/pq"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -13,8 +15,9 @@ type (
 
 	Experiment struct {
 		gorm.Model
-		Title   string `gorm:"size:20;not null"`
-		Results []Result
+		Title    string `gorm:"size:20;not null"`
+		Results  []Result
+		TimeAxis pq.StringArray `gorm:"type:text[];not null"`
 	}
 )
 
@@ -28,8 +31,9 @@ func (r *ExperimentRepository) Store(d domain.Experiment) (id int, err error) {
 	}
 
 	experiment := &Experiment{
-		Title:   d.Title,
-		Results: results,
+		Title:    d.Title,
+		Results:  results,
+		TimeAxis: d.TimeAxis,
 	}
 
 	if err = r.Conn.Create(experiment).Error; err != nil {
@@ -55,9 +59,10 @@ func (r *ExperimentRepository) FindByID(id string) (d domain.Experiment, err err
 	}
 
 	d = domain.Experiment{
-		ID:      experiment.ID,
-		Title:   experiment.Title,
-		Results: results,
+		ID:       experiment.ID,
+		Title:    experiment.Title,
+		Results:  results,
+		TimeAxis: experiment.TimeAxis,
 	}
 
 	return
@@ -91,4 +96,17 @@ func (r *ExperimentRepository) FindAll() (d []domain.Experiment, err error) {
 		d[i].Title = experiments[i].Title
 	}
 	return
+}
+
+func (r *ExperimentRepository) Delete(id string) (deleted_id int, err error) {
+	experiment := Experiment{}
+	if err = r.Conn.First(&experiment, id).Error; err != nil {
+		return
+	}
+
+	if err = r.Conn.Delete(&experiment).Error; err != nil {
+		return
+	}
+
+	return int(experiment.ID), nil
 }

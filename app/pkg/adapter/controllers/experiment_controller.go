@@ -28,8 +28,9 @@ func NewExperimentController(conn *gorm.DB, logger interfaces.Logger) *Experimen
 func (controller *ExperimentController) Create(c interfaces.Context) {
 	type (
 		Request struct {
-			Title   string          `json:"title"`
-			Results []domain.Result `json:"results"`
+			Title    string          `json:"title"`
+			Results  []domain.Result `json:"results"`
+			TimeAxis []string        `json:"time_axis"`
 		}
 		Response struct {
 			ExperimentID int `json:"experiment_id"`
@@ -41,7 +42,7 @@ func (controller *ExperimentController) Create(c interfaces.Context) {
 		c.JSON(400, NewError(400, err.Error()))
 		return
 	}
-	experiment := domain.Experiment{Title: req.Title, Results: req.Results}
+	experiment := domain.Experiment{Title: req.Title, Results: req.Results, TimeAxis: req.TimeAxis}
 
 	id, err := controller.Interactor.Add(experiment)
 	if err != nil {
@@ -124,5 +125,27 @@ func (controller *ExperimentController) ShowByTitle(c interfaces.Context) {
 		return
 	}
 	res := Response{Experiments: r}
+	c.JSON(200, res)
+}
+
+func (controller *ExperimentController) Delete(c interfaces.Context) {
+	type (
+		Request struct {
+			ID string
+		}
+		Response struct {
+			ExperimentID int `json:"experiment_id"`
+		}
+	)
+	req := Request{}
+	req.ID = c.Param("id")
+
+	r, err := controller.Interactor.Remove(req.ID)
+	if err != nil {
+		controller.Interactor.Logger.Log(errors.Wrap(err, "experiment_controller: cannot remove experiment"))
+		c.JSON(500, NewError(500, err.Error()))
+		return
+	}
+	res := Response{ExperimentID: r}
 	c.JSON(200, res)
 }

@@ -73,3 +73,16 @@ func (r *ResultRepository) FindAll() (d []domain.Result, err error) {
 
 	return
 }
+
+func (r *ResultRepository) Delete(id string) (deleted_id int, err error) {
+	result := Result{}
+	if err = r.Conn.First(&result, id).Error; err != nil {
+		return
+	}
+
+	if err = r.Conn.Delete(&result).Error; err != nil {
+		return
+	}
+
+	return int(result.ID), nil
+}

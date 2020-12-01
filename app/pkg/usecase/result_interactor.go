@@ -15,6 +15,11 @@ func (i *ResultInteractor) Add(r domain.Result, experiment_id string) (int, erro
 	return i.ResultRepository.Store(r, experiment_id)
 }
 
+func (i *ResultInteractor) Remove(id string) (int, error) {
+	i.Logger.Log("remove result!")
+	return i.ResultRepository.Delete(id)
+}
+
 func (i *ResultInteractor) FindAll() ([]domain.Result, error) {
 	i.Logger.Log("find all result")
 	return i.ResultRepository.FindAll()
