@@ -77,15 +77,50 @@ func (controller *ExperimentController) Show(c interfaces.Context) {
 
 func (controller *ExperimentController) Index(c interfaces.Context) {
 	type (
+		Request struct {
+			Title string
+		}
 		Response struct {
 			Experiments []domain.Experiment `json:"experiments"`
 		}
 	)
+	req := Request{}
+	req.Title = c.Query("title")
 
-	r, err := controller.Interactor.FindAll()
+	var r []domain.Experiment
+	var err error
+
+	if req.Title != "" {
+		r, err = controller.Interactor.FindByTitle(req.Title)
+	} else {
+		r, err = controller.Interactor.FindAll()
+	}
+
 	if err != nil {
-		controller.Interactor.Logger.Log(errors.Wrap(err, "result_controller: findall error"))
+		controller.Interactor.Logger.Log(errors.Wrap(err, "experiment_controller: findall error"))
 		c.JSON(500, NewError(500, err.Error()))
+		return
+	}
+	res := Response{Experiments: r}
+	c.JSON(200, res)
+}
+
+func (controller *ExperimentController) ShowByTitle(c interfaces.Context) {
+	type (
+		Request struct {
+			Title string
+		}
+		Response struct {
+			Experiments []domain.Experiment `json:"experiments"`
+		}
+	)
+	req := Request{}
+	req.Title = c.Param("title")
+
+	r, err := controller.Interactor.FindByTitle(req.Title)
+	if err != nil {
+		controller.Interactor.Logger.Log(errors.Wrap(err, "experiment_controller: not found experiment"))
+		c.JSON(500, NewError(404, err.Error()))
 		return
 	}
 	res := Response{Experiments: r}

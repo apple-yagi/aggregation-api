@@ -21,7 +21,9 @@ func init() {
 	router.GET("/experiments", func(c *gin.Context) { experimentController.Index(c) })
 	router.POST("/experiments", func(c *gin.Context) { experimentController.Create(c) })
 	router.GET("/experiments/:id", func(c *gin.Context) { experimentController.Show(c) })
+
 	router.GET("/results", func(c *gin.Context) { resultController.Index(c) })
+	router.GET("/results/:id", func(c *gin.Context) { resultController.Show(c) })
 	router.POST("/experiments/:experiment_id/results", func(c *gin.Context) { resultController.Create(c) })
 
 	Router = router
