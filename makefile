@@ -14,3 +14,7 @@ mydb:
 	docker-compose up -d mydb
 pgdb:
 	docker-compose up -d pgdb
+pull:
+	git pull origin master
+push:
+	git push origin master
