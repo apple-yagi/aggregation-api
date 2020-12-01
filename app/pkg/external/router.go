@@ -5,6 +5,7 @@ import (
 	"aggregation-mod/pkg/external/pg"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +17,11 @@ func init() {
 	conn := pg.Connect()
 	experimentController := controllers.NewExperimentController(conn, logger)
 	resultController := controllers.NewResultController(conn, logger)
+
+	// CORS対応
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	router.Use(cors.New(config))
 
 	router.GET("/", func(c *gin.Context) { c.String(http.StatusOK, "hello world") })
 	router.GET("/experiments", func(c *gin.Context) { experimentController.Index(c) })
