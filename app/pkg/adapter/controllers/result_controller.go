@@ -116,3 +116,37 @@ func (controller *ResultController) Delete(c interfaces.Context) {
 	res := Response{ResultID: r}
 	c.JSON(200, res)
 }
+
+func (controller *ResultController) Update(c interfaces.Context) {
+	type (
+		Request struct {
+			Label string   `json:"label"`
+			Value []string `json:"value"`
+		}
+		Response struct {
+			ResultID int `json:"result_id"`
+		}
+	)
+	req := Request{}
+	var err error
+
+	err = c.Bind(&req)
+	i := c.Param("id")
+
+	if err != nil || i == "" {
+		controller.Interactor.Logger.Log(errors.Wrap(err, "result_controller: bad request"))
+		c.JSON(400, NewError(400, "Bad Request"))
+		return
+	}
+	result := domain.Result{Label: req.Label, Value: req.Value}
+
+	id, err := controller.Interactor.Update(result, i)
+	if err != nil {
+		controller.Interactor.Logger.Log(errors.Wrap(err, "result_controller: cannot update result"))
+		c.JSON(500, NewError(500, err.Error()))
+		return
+	}
+
+	res := Response{ResultID: id}
+	c.JSON(200, res)
+}

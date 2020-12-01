@@ -98,6 +98,30 @@ func (r *ExperimentRepository) FindAll() (d []domain.Experiment, err error) {
 	return
 }
 
+func (r *ExperimentRepository) Update(d domain.Experiment, i string) (id int, err error) {
+	n := len(d.Results)
+	results := make([]Result, n)
+	for i := 0; i < n; i++ {
+		results[i].ID = d.Results[i].ID
+		results[i].Label = d.Results[i].Label
+		results[i].Value = d.Results[i].Value
+	}
+
+	experiment := Experiment{}
+	if err = r.Conn.First(&experiment, i).Error; err != nil {
+		return
+	}
+
+	experiment.Title = d.Title
+	experiment.TimeAxis = d.TimeAxis
+	experiment.Results = results
+	if err = r.Conn.Save(experiment).Error; err != nil {
+		return
+	}
+
+	return int(experiment.ID), nil
+}
+
 func (r *ExperimentRepository) Delete(id string) (deleted_id int, err error) {
 	experiment := Experiment{}
 	if err = r.Conn.First(&experiment, id).Error; err != nil {

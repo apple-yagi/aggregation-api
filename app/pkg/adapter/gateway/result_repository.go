@@ -16,7 +16,7 @@ type (
 	Result struct {
 		gorm.Model
 		Label        string         `gorm:"size:20;not null"`
-		Value        pq.StringArray `gorm:"type:text[]"`
+		Value        pq.StringArray `gorm:"type:text[];not null"`
 		ExperimentID uint
 	}
 )
@@ -34,6 +34,22 @@ func (r *ResultRepository) Store(d domain.Result, experiment_id string) (id int,
 	}
 
 	if err = r.Conn.Create(result).Error; err != nil {
+		return
+	}
+
+	return int(result.ID), nil
+}
+
+func (r *ResultRepository) Update(d domain.Result, i string) (id int, err error) {
+	result := Result{}
+	if err = r.Conn.First(&result, i).Error; err != nil {
+		return
+	}
+
+	result.Label = d.Label
+	result.Value = d.Value
+
+	if err = r.Conn.Update(&result).Error; err != nil {
 		return
 	}
 

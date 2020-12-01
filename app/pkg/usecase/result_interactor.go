@@ -20,6 +20,11 @@ func (i *ResultInteractor) Remove(id string) (int, error) {
 	return i.ResultRepository.Delete(id)
 }
 
+func (i *ResultInteractor) Update(r domain.Result, id string) (int, error) {
+	i.Logger.Log("update result!")
+	return i.ResultRepository.Update(r, id)
+}
+
 func (i *ResultInteractor) FindAll() ([]domain.Result, error) {
 	i.Logger.Log("find all result")
 	return i.ResultRepository.FindAll()

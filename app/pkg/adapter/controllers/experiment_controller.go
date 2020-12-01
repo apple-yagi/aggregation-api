@@ -149,3 +149,36 @@ func (controller *ExperimentController) Delete(c interfaces.Context) {
 	res := Response{ExperimentID: r}
 	c.JSON(200, res)
 }
+
+func (controller *ExperimentController) Update(c interfaces.Context) {
+	type (
+		Request struct {
+			Title    string          `json:"title"`
+			Results  []domain.Result `json:"results"`
+			TimeAxis []string        `json:"time_axis"`
+		}
+		Response struct {
+			ExperimentID int `json:"experiment_id"`
+		}
+	)
+	req := Request{}
+	err := c.Bind(&req)
+	i := c.Param("id")
+
+	if err != nil || i == "" {
+		controller.Interactor.Logger.Log(errors.Wrap(err, "experiment_controller: bad request"))
+		c.JSON(400, NewError(400, "Bad Request"))
+		return
+	}
+	experiment := domain.Experiment{Title: req.Title, Results: req.Results, TimeAxis: req.TimeAxis}
+
+	id, err := controller.Interactor.Update(experiment, i)
+	if err != nil {
+		controller.Interactor.Logger.Log(errors.Wrap(err, "experiment_controller: cannot update experiment"))
+		c.JSON(500, NewError(500, err.Error()))
+		return
+	}
+
+	res := Response{ExperimentID: id}
+	c.JSON(200, res)
+}

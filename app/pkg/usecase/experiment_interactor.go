@@ -20,6 +20,11 @@ func (i *ExperimentInteractor) Remove(id string) (int, error) {
 	return i.ExperimentRepository.Delete(id)
 }
 
+func (i *ExperimentInteractor) Update(e domain.Experiment, id string) (int, error) {
+	i.Logger.Log("update experiment!")
+	return i.ExperimentRepository.Update(e, id)
+}
+
 func (i *ExperimentInteractor) FindAll() ([]domain.Experiment, error) {
 	i.Logger.Log("findall experiment")
 	return i.ExperimentRepository.FindAll()
