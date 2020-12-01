@@ -10,8 +10,6 @@ ps:
 	docker ps -a
 server:
 	docker-compose up -d app
-mydb:
-	docker-compose up -d mydb
 pgdb:
 	docker-compose up -d pgdb
 pull:

@@ -6,10 +6,8 @@ services:
     ports:
       - "3030:3030"
     links:
-      - mydb
       - pgdb
     depends_on:
-      - mydb
       - pgdb
     environment:
       - PG_SSLMODE=disable
@@ -21,17 +19,6 @@ services:
     volumes:
       - ./app:/app
     command: air
-
-  mydb:
-    build: ./mysql
-    container_name: mydb
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: hoge
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    volumes:
-      - ./mysql/db:/var/lib/mysql
 
   pgdb:
     image: postgres:12.5
