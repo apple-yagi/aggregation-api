@@ -71,6 +71,8 @@ func (r *ResultRepository) FindByID(id string) (d domain.Result, err error) {
 		Value:        result.Value,
 		ExperimentID: result.ExperimentID,
 		Unit:         result.Unit,
+		CreatedAt:    result.CreatedAt,
+		UpdatedAt:    result.UpdatedAt,
 	}
 
 	return
@@ -90,6 +92,8 @@ func (r *ResultRepository) FindAll() (d []domain.Result, err error) {
 		d[i].Value = results[i].Value
 		d[i].ExperimentID = results[i].ExperimentID
 		d[i].Unit = results[i].Unit
+		d[i].CreatedAt = results[i].CreatedAt
+		d[i].UpdatedAt = results[i].UpdatedAt
 	}
 
 	return

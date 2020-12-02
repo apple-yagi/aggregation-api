@@ -29,6 +29,8 @@ func (r *ExperimentRepository) Store(d domain.Experiment) (id int, err error) {
 		results[i].Label = d.Results[i].Label
 		results[i].Value = d.Results[i].Value
 		results[i].Unit = d.Results[i].Unit
+		results[i].CreatedAt = d.Results[i].CreatedAt
+		results[i].UpdatedAt = d.Results[i].UpdatedAt
 	}
 
 	experiment := &Experiment{
@@ -61,10 +63,12 @@ func (r *ExperimentRepository) FindByID(id string) (d domain.Experiment, err err
 	}
 
 	d = domain.Experiment{
-		ID:       experiment.ID,
-		Title:    experiment.Title,
-		Results:  results,
-		TimeAxis: experiment.TimeAxis,
+		ID:        experiment.ID,
+		Title:     experiment.Title,
+		Results:   results,
+		TimeAxis:  experiment.TimeAxis,
+		CreatedAt: experiment.CreatedAt,
+		UpdatedAt: experiment.UpdatedAt,
 	}
 
 	return
@@ -81,6 +85,8 @@ func (r *ExperimentRepository) FindByTitle(title string) (d []domain.Experiment,
 	for i := 0; i < n; i++ {
 		d[i].ID = experiments[i].ID
 		d[i].Title = experiments[i].Title
+		d[i].CreatedAt = experiments[i].CreatedAt
+		d[i].UpdatedAt = experiments[i].UpdatedAt
 	}
 	return
 }
@@ -96,6 +102,8 @@ func (r *ExperimentRepository) FindAll() (d []domain.Experiment, err error) {
 	for i := 0; i < n; i++ {
 		d[i].ID = experiments[i].ID
 		d[i].Title = experiments[i].Title
+		d[i].CreatedAt = experiments[i].CreatedAt
+		d[i].UpdatedAt = experiments[i].UpdatedAt
 	}
 	return
 }
@@ -108,6 +116,8 @@ func (r *ExperimentRepository) Update(d domain.Experiment, i string) (id int, er
 		results[i].Label = d.Results[i].Label
 		results[i].Value = d.Results[i].Value
 		results[i].Unit = d.Results[i].Unit
+		results[i].CreatedAt = d.Results[i].CreatedAt
+		results[i].UpdatedAt = d.Results[i].UpdatedAt
 	}
 
 	experiment := Experiment{}
