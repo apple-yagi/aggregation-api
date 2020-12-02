@@ -62,7 +62,11 @@ func (controller *ResultController) Show(c interfaces.Context) {
 			ID string
 		}
 		Response struct {
-			Result domain.Result `json:"result"`
+			ID           uint     `json:"id"`
+			Label        string   `json:"label"`
+			Value        []string `json:"value"`
+			Unit         string   `json:"unit"`
+			ExperimentID uint     `json:"experiment_id"`
 		}
 	)
 	req := Request{}
@@ -74,25 +78,18 @@ func (controller *ResultController) Show(c interfaces.Context) {
 		c.JSON(404, NewError(404, err.Error()))
 		return
 	}
-	res := Response{Result: r}
+	res := Response{ID: r.ID, Label: r.Label, Value: r.Value, Unit: r.Unit, ExperimentID: r.ExperimentID}
 	c.JSON(200, res)
 }
 
 func (controller *ResultController) Index(c interfaces.Context) {
-	type (
-		Response struct {
-			Results []domain.Result `json:"results"`
-		}
-	)
-
 	r, err := controller.Interactor.FindAll()
 	if err != nil {
 		controller.Interactor.Logger.Log(errors.Wrap(err, "result_controller: findall error"))
 		c.JSON(500, NewError(500, err.Error()))
 		return
 	}
-	res := Response{Results: r}
-	c.JSON(200, res)
+	c.JSON(200, r)
 }
 
 func (controller *ResultController) Delete(c interfaces.Context) {
@@ -114,7 +111,7 @@ func (controller *ResultController) Delete(c interfaces.Context) {
 		return
 	}
 	res := Response{ResultID: r}
-	c.JSON(200, res)
+	c.JSON(200, res.ResultID)
 }
 
 func (controller *ResultController) Update(c interfaces.Context) {
@@ -148,5 +145,5 @@ func (controller *ResultController) Update(c interfaces.Context) {
 	}
 
 	res := Response{ResultID: id}
-	c.JSON(200, res)
+	c.JSON(200, res.ResultID)
 }

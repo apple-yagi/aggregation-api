@@ -15,7 +15,7 @@ type (
 
 	Experiment struct {
 		gorm.Model
-		Title    string `gorm:"size:20;not null"`
+		Title    string `gorm:"size:20;not null;unique"`
 		Results  []Result
 		TimeAxis pq.StringArray `gorm:"type:text[];not null"`
 	}
@@ -28,6 +28,7 @@ func (r *ExperimentRepository) Store(d domain.Experiment) (id int, err error) {
 		results[i].ID = d.Results[i].ID
 		results[i].Label = d.Results[i].Label
 		results[i].Value = d.Results[i].Value
+		results[i].Unit = d.Results[i].Unit
 	}
 
 	experiment := &Experiment{
@@ -56,6 +57,7 @@ func (r *ExperimentRepository) FindByID(id string) (d domain.Experiment, err err
 		results[i].Label = experiment.Results[i].Label
 		results[i].Value = experiment.Results[i].Value
 		results[i].ExperimentID = experiment.Results[i].ExperimentID
+		results[i].Unit = experiment.Results[i].Unit
 	}
 
 	d = domain.Experiment{
@@ -105,6 +107,7 @@ func (r *ExperimentRepository) Update(d domain.Experiment, i string) (id int, er
 		results[i].ID = d.Results[i].ID
 		results[i].Label = d.Results[i].Label
 		results[i].Value = d.Results[i].Value
+		results[i].Unit = d.Results[i].Unit
 	}
 
 	experiment := Experiment{}

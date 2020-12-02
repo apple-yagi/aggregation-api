@@ -73,7 +73,7 @@ func (controller *ExperimentController) Show(c interfaces.Context) {
 		return
 	}
 	res := Response{Experiment: r}
-	c.JSON(200, res)
+	c.JSON(200, res.Experiment)
 }
 
 func (controller *ExperimentController) Index(c interfaces.Context) {
@@ -103,7 +103,7 @@ func (controller *ExperimentController) Index(c interfaces.Context) {
 		return
 	}
 	res := Response{Experiments: r}
-	c.JSON(200, res)
+	c.JSON(200, res.Experiments)
 }
 
 func (controller *ExperimentController) ShowByTitle(c interfaces.Context) {
@@ -125,7 +125,7 @@ func (controller *ExperimentController) ShowByTitle(c interfaces.Context) {
 		return
 	}
 	res := Response{Experiments: r}
-	c.JSON(200, res)
+	c.JSON(200, res.Experiments)
 }
 
 func (controller *ExperimentController) Delete(c interfaces.Context) {

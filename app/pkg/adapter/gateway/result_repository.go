@@ -18,6 +18,7 @@ type (
 		Label        string         `gorm:"size:20;not null"`
 		Value        pq.StringArray `gorm:"type:text[];not null"`
 		ExperimentID uint
+		Unit         string `gorm:"not null"`
 	}
 )
 
@@ -31,6 +32,7 @@ func (r *ResultRepository) Store(d domain.Result, experiment_id string) (id int,
 		Label:        d.Label,
 		Value:        d.Value,
 		ExperimentID: experiment.ID,
+		Unit:         d.Unit,
 	}
 
 	if err = r.Conn.Create(result).Error; err != nil {
@@ -48,6 +50,7 @@ func (r *ResultRepository) Update(d domain.Result, i string) (id int, err error)
 
 	result.Label = d.Label
 	result.Value = d.Value
+	result.Unit = d.Unit
 
 	if err = r.Conn.Update(&result).Error; err != nil {
 		return
@@ -67,6 +70,7 @@ func (r *ResultRepository) FindByID(id string) (d domain.Result, err error) {
 		Label:        result.Label,
 		Value:        result.Value,
 		ExperimentID: result.ExperimentID,
+		Unit:         result.Unit,
 	}
 
 	return
@@ -85,6 +89,7 @@ func (r *ResultRepository) FindAll() (d []domain.Result, err error) {
 		d[i].Label = results[i].Label
 		d[i].Value = results[i].Value
 		d[i].ExperimentID = results[i].ExperimentID
+		d[i].Unit = results[i].Unit
 	}
 
 	return
