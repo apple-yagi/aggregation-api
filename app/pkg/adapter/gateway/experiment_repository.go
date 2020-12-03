@@ -3,8 +3,6 @@ package gateway
 import (
 	"aggregation-mod/pkg/domain"
 
-	"github.com/lib/pq"
-
 	"github.com/jinzhu/gorm"
 )
 
@@ -17,7 +15,8 @@ type (
 		gorm.Model
 		Title    string `gorm:"size:20;not null;unique"`
 		Results  []Result
-		TimeAxis pq.StringArray `gorm:"type:text[];not null"`
+		Interval int
+		Count    int
 	}
 )
 
@@ -29,6 +28,7 @@ func (r *ExperimentRepository) Store(d domain.Experiment) (id int, err error) {
 		results[i].Label = d.Results[i].Label
 		results[i].Value = d.Results[i].Value
 		results[i].Unit = d.Results[i].Unit
+		results[i].Color = d.Results[i].Color
 		results[i].CreatedAt = d.Results[i].CreatedAt
 		results[i].UpdatedAt = d.Results[i].UpdatedAt
 	}
@@ -36,7 +36,8 @@ func (r *ExperimentRepository) Store(d domain.Experiment) (id int, err error) {
 	experiment := &Experiment{
 		Title:    d.Title,
 		Results:  results,
-		TimeAxis: d.TimeAxis,
+		Interval: d.Interval,
+		Count:    d.Count,
 	}
 
 	if err = r.Conn.Create(experiment).Error; err != nil {
@@ -58,6 +59,7 @@ func (r *ExperimentRepository) FindByID(id string) (d domain.Experiment, err err
 		results[i].ID = experiment.Results[i].ID
 		results[i].Label = experiment.Results[i].Label
 		results[i].Value = experiment.Results[i].Value
+		results[i].Color = experiment.Results[i].Color
 		results[i].ExperimentID = experiment.Results[i].ExperimentID
 		results[i].Unit = experiment.Results[i].Unit
 	}
@@ -66,7 +68,8 @@ func (r *ExperimentRepository) FindByID(id string) (d domain.Experiment, err err
 		ID:        experiment.ID,
 		Title:     experiment.Title,
 		Results:   results,
-		TimeAxis:  experiment.TimeAxis,
+		Interval:  experiment.Interval,
+		Count:     experiment.Count,
 		CreatedAt: experiment.CreatedAt,
 		UpdatedAt: experiment.UpdatedAt,
 	}
@@ -116,6 +119,7 @@ func (r *ExperimentRepository) Update(d domain.Experiment, i string) (id int, er
 		results[i].Label = d.Results[i].Label
 		results[i].Value = d.Results[i].Value
 		results[i].Unit = d.Results[i].Unit
+		results[i].Color = d.Results[i].Color
 		results[i].CreatedAt = d.Results[i].CreatedAt
 		results[i].UpdatedAt = d.Results[i].UpdatedAt
 	}
@@ -126,7 +130,8 @@ func (r *ExperimentRepository) Update(d domain.Experiment, i string) (id int, er
 	}
 
 	experiment.Title = d.Title
-	experiment.TimeAxis = d.TimeAxis
+	experiment.Interval = d.Interval
+	experiment.Count = d.Count
 	experiment.Results = results
 	if err = r.Conn.Save(experiment).Error; err != nil {
 		return

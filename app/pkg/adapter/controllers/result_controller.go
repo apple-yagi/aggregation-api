@@ -30,6 +30,8 @@ func (controller *ResultController) Create(c interfaces.Context) {
 		Request struct {
 			Label string   `json:"label"`
 			Value []string `json:"value"`
+			Color string   `json:"color"`
+			Unit  string   `json:"unit"`
 		}
 		Response struct {
 			ResultID int `json:"result_id"`
@@ -44,7 +46,7 @@ func (controller *ResultController) Create(c interfaces.Context) {
 
 	e_id := c.Param("experiment_id")
 
-	result := domain.Result{Label: req.Label, Value: req.Value}
+	result := domain.Result{Label: req.Label, Value: req.Value, Color: req.Color, Unit: req.Unit}
 
 	id, err := controller.Interactor.Add(result, e_id)
 	if err != nil {
@@ -66,6 +68,7 @@ func (controller *ResultController) Show(c interfaces.Context) {
 			Label        string   `json:"label"`
 			Value        []string `json:"value"`
 			Unit         string   `json:"unit"`
+			Color        string   `json:"color"`
 			ExperimentID uint     `json:"experiment_id"`
 		}
 	)
@@ -119,6 +122,8 @@ func (controller *ResultController) Update(c interfaces.Context) {
 		Request struct {
 			Label string   `json:"label"`
 			Value []string `json:"value"`
+			Unit  string   `json:"unit"`
+			Color string   `json:"color"`
 		}
 		Response struct {
 			ResultID int `json:"result_id"`

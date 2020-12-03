@@ -9,6 +9,7 @@ type Result struct {
 	Label        string    `json:"label"`
 	Value        []string  `json:"value"`
 	Unit         string    `json:"unit"`
+	Color        string    `json:"color"`
 	ExperimentID uint      `json:"experiment_id"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`

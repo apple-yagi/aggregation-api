@@ -30,7 +30,8 @@ func (controller *ExperimentController) Create(c interfaces.Context) {
 		Request struct {
 			Title    string          `json:"title"`
 			Results  []domain.Result `json:"results"`
-			TimeAxis []string        `json:"time_axis"`
+			Interval int             `json:"interval"`
+			Count    int             `json:"count"`
 		}
 		Response struct {
 			ExperimentID int `json:"experiment_id"`
@@ -42,7 +43,7 @@ func (controller *ExperimentController) Create(c interfaces.Context) {
 		c.JSON(400, NewError(400, err.Error()))
 		return
 	}
-	experiment := domain.Experiment{Title: req.Title, Results: req.Results, TimeAxis: req.TimeAxis}
+	experiment := domain.Experiment{Title: req.Title, Results: req.Results, Interval: req.Interval, Count: req.Count}
 
 	id, err := controller.Interactor.Add(experiment)
 	if err != nil {
@@ -155,7 +156,8 @@ func (controller *ExperimentController) Update(c interfaces.Context) {
 		Request struct {
 			Title    string          `json:"title"`
 			Results  []domain.Result `json:"results"`
-			TimeAxis []string        `json:"time_axis"`
+			Interval int             `json:"interval"`
+			Count    int             `json:"count"`
 		}
 		Response struct {
 			ExperimentID int `json:"experiment_id"`
@@ -170,7 +172,7 @@ func (controller *ExperimentController) Update(c interfaces.Context) {
 		c.JSON(400, NewError(400, "Bad Request"))
 		return
 	}
-	experiment := domain.Experiment{Title: req.Title, Results: req.Results, TimeAxis: req.TimeAxis}
+	experiment := domain.Experiment{Title: req.Title, Results: req.Results, Interval: req.Interval, Count: req.Count}
 
 	id, err := controller.Interactor.Update(experiment, i)
 	if err != nil {
