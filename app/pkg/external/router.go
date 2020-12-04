@@ -36,5 +36,7 @@ func init() {
 	router.DELETE("/results/:id", func(c *gin.Context) { resultController.Delete(c) })
 	router.PATCH("/results/:id", func(c *gin.Context) { resultController.Update(c) })
 
+	router.POST("/upload", func(c *gin.Context) { controllers.Save(c) })
+
 	Router = router
 }

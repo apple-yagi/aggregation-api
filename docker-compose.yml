@@ -18,6 +18,7 @@ services:
       - PG_PASSWORD=password
     volumes:
       - ./app:/app
+      - ./app/files:/app/files:Z
     command: air
 
   pgdb:
