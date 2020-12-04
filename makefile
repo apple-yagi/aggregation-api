@@ -17,6 +17,6 @@ pull:
 push:
 	git push origin master
 start:
-	podman-compose -f produciton.yml up --build -d
+	podman-compose -f production.yml up --build -d
 stop:
-	podman-compose -f produciton.yml down
+	podman-compose -f production.yml down
