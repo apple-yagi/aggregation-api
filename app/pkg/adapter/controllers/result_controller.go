@@ -29,7 +29,7 @@ func (controller *ResultController) Create(c interfaces.Context) {
 	type (
 		Request struct {
 			Label string    `json:"label"`
-			Value []float64 `json:"value"`
+			Value []float32 `json:"value"`
 			Color string    `json:"color"`
 			Unit  string    `json:"unit"`
 		}
@@ -66,7 +66,7 @@ func (controller *ResultController) Show(c interfaces.Context) {
 		Response struct {
 			ID           uint      `json:"id"`
 			Label        string    `json:"label"`
-			Value        []float64 `json:"value"`
+			Value        []float32 `json:"value"`
 			Unit         string    `json:"unit"`
 			Color        string    `json:"color"`
 			ExperimentID uint      `json:"experiment_id"`
@@ -121,7 +121,7 @@ func (controller *ResultController) Update(c interfaces.Context) {
 	type (
 		Request struct {
 			Label string    `json:"label"`
-			Value []float64 `json:"value"`
+			Value []float32 `json:"value"`
 			Unit  string    `json:"unit"`
 			Color string    `json:"color"`
 		}

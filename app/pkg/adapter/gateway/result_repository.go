@@ -4,8 +4,6 @@ import (
 	"aggregation-mod/pkg/domain"
 	"fmt"
 
-	"github.com/lib/pq"
-
 	"github.com/jinzhu/gorm"
 )
 
@@ -16,8 +14,8 @@ type (
 
 	Result struct {
 		gorm.Model
-		Label        string          `gorm:"size:20;not null"`
-		Value        pq.Float64Array `gorm:"type:float[];not null"`
+		Label        string    `gorm:"size:20;not null"`
+		Value        []float32 `gorm:"type:decimal(7,6);not null"`
 		ExperimentID uint
 		Unit         string `gorm:"not null"`
 		Color        string
