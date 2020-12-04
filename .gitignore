@@ -2,4 +2,5 @@ mysql/db/
 pg-data/
 app/tmp/
 production.yml
+app/Dockerfile.prod
 app/files/
