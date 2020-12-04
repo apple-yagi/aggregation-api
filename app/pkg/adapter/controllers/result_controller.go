@@ -28,10 +28,10 @@ func NewResultController(conn *gorm.DB, logger interfaces.Logger) *ResultControl
 func (controller *ResultController) Create(c interfaces.Context) {
 	type (
 		Request struct {
-			Label string  `json:"label"`
-			Value []int64 `json:"value"`
-			Color string  `json:"color"`
-			Unit  string  `json:"unit"`
+			Label string    `json:"label"`
+			Value []float64 `json:"value"`
+			Color string    `json:"color"`
+			Unit  string    `json:"unit"`
 		}
 		Response struct {
 			ResultID int `json:"result_id"`
@@ -64,12 +64,12 @@ func (controller *ResultController) Show(c interfaces.Context) {
 			ID string
 		}
 		Response struct {
-			ID           uint    `json:"id"`
-			Label        string  `json:"label"`
-			Value        []int64 `json:"value"`
-			Unit         string  `json:"unit"`
-			Color        string  `json:"color"`
-			ExperimentID uint    `json:"experiment_id"`
+			ID           uint      `json:"id"`
+			Label        string    `json:"label"`
+			Value        []float64 `json:"value"`
+			Unit         string    `json:"unit"`
+			Color        string    `json:"color"`
+			ExperimentID uint      `json:"experiment_id"`
 		}
 	)
 	req := Request{}
@@ -120,10 +120,10 @@ func (controller *ResultController) Delete(c interfaces.Context) {
 func (controller *ResultController) Update(c interfaces.Context) {
 	type (
 		Request struct {
-			Label string  `json:"label"`
-			Value []int64 `json:"value"`
-			Unit  string  `json:"unit"`
-			Color string  `json:"color"`
+			Label string    `json:"label"`
+			Value []float64 `json:"value"`
+			Unit  string    `json:"unit"`
+			Color string    `json:"color"`
 		}
 		Response struct {
 			ResultID int `json:"result_id"`
