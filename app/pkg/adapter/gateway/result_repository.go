@@ -16,8 +16,8 @@ type (
 
 	Result struct {
 		gorm.Model
-		Label        string `gorm:"size:20;not null"`
-		Value        pq.Float64Array
+		Label        string          `gorm:"size:20;not null"`
+		Value        pq.Float64Array `gorm:"type:numeric[];not null"`
 		ExperimentID uint
 		Unit         string `gorm:"not null"`
 		Color        string
