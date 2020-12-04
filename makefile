@@ -16,3 +16,5 @@ pull:
 	git pull origin master
 push:
 	git push origin master
+start:
+	podman-compose up --build -d
