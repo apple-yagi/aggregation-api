@@ -7,7 +7,7 @@ import (
 type Result struct {
 	ID           uint      `json:"id"`
 	Label        string    `json:"label"`
-	Value        []float32 `json:"value"`
+	Value        []float64 `json:"value"`
 	Unit         string    `json:"unit"`
 	Color        string    `json:"color"`
 	ExperimentID uint      `json:"experiment_id"`
