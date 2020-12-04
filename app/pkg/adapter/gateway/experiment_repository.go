@@ -60,6 +60,8 @@ func (r *ExperimentRepository) FindByID(id string) (d domain.Experiment, err err
 		results[i].Label = experiment.Results[i].Label
 		results[i].Value = experiment.Results[i].Value
 		results[i].Color = experiment.Results[i].Color
+		results[i].CreatedAt = experiment.Results[i].CreatedAt
+		results[i].UpdatedAt = experiment.Results[i].UpdatedAt
 		results[i].ExperimentID = experiment.Results[i].ExperimentID
 		results[i].Unit = experiment.Results[i].Unit
 	}
@@ -88,6 +90,8 @@ func (r *ExperimentRepository) FindByTitle(title string) (d []domain.Experiment,
 	for i := 0; i < n; i++ {
 		d[i].ID = experiments[i].ID
 		d[i].Title = experiments[i].Title
+		d[i].Count = experiments[i].Count
+		d[i].Interval = experiments[i].Interval
 		d[i].CreatedAt = experiments[i].CreatedAt
 		d[i].UpdatedAt = experiments[i].UpdatedAt
 	}
@@ -105,6 +109,8 @@ func (r *ExperimentRepository) FindAll() (d []domain.Experiment, err error) {
 	for i := 0; i < n; i++ {
 		d[i].ID = experiments[i].ID
 		d[i].Title = experiments[i].Title
+		d[i].Interval = experiments[i].Interval
+		d[i].Count = experiments[i].Count
 		d[i].CreatedAt = experiments[i].CreatedAt
 		d[i].UpdatedAt = experiments[i].UpdatedAt
 	}
@@ -142,7 +148,7 @@ func (r *ExperimentRepository) Update(d domain.Experiment, i string) (id int, er
 
 func (r *ExperimentRepository) Delete(id string) (deleted_id int, err error) {
 	experiment := Experiment{}
-	if err = r.Conn.First(&experiment, id).Error; err != nil {
+	if err = r.Conn.Preload("Results").First(&experiment, id).Error; err != nil {
 		return
 	}
 

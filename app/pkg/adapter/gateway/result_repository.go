@@ -58,7 +58,7 @@ func (r *ResultRepository) Update(d domain.Result, i string) (id int, err error)
 	result.Unit = d.Unit
 	result.Color = d.Color
 
-	if err = r.Conn.Update(&result).Error; err != nil {
+	if err = r.Conn.Save(&result).Error; err != nil {
 		return
 	}
 

@@ -140,7 +140,7 @@ func (controller *ResultController) Update(c interfaces.Context) {
 		c.JSON(400, NewError(400, "Bad Request"))
 		return
 	}
-	result := domain.Result{Label: req.Label, Value: req.Value}
+	result := domain.Result{Label: req.Label, Value: req.Value, Unit: req.Unit, Color: req.Color}
 
 	id, err := controller.Interactor.Update(result, i)
 	if err != nil {
